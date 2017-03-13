@@ -7,7 +7,7 @@
 package io.sqlc;
 
 import android.annotation.SuppressLint;
-
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.File;
@@ -199,9 +199,8 @@ public class SQLitePlugin extends CordovaPlugin {
         try {
             // ASSUMPTION: no db (connection/handle) is already stored in the map
             // [should be true according to the code in DBRunner.run()]
-
-            File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
-
+            Uri uri = Uri.parse(dbname);
+            File dbfile = this.cordova.getActivity().getDatabasePath(uri.getPath());
             if (!dbfile.exists()) {
                 dbfile.getParentFile().mkdirs();
             }
@@ -290,7 +289,8 @@ public class SQLitePlugin extends CordovaPlugin {
      * @return true if successful or false if an exception was encountered
      */
     private boolean deleteDatabaseNow(String dbname) {
-        File dbfile = this.cordova.getActivity().getDatabasePath(dbname);
+        Uri uri = Uri.parse(dbname);
+        File dbfile = this.cordova.getActivity().getDatabasePath(uri.getPath());
 
         try {
             return cordova.getActivity().deleteDatabase(dbfile.getAbsolutePath());
